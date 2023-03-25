@@ -1,8 +1,10 @@
 import Foundation
 import Combine
 
-class Network: NetworkProtocol {
-    var manager: NetworkController = NetworkController()
+open class Network: NetworkProtocol {
+    public var manager: NetworkController = NetworkController()
+    
+    public init() {}
 }
 
 public class NetworkController: NetworkControllerProtocol {
