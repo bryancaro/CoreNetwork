@@ -10,8 +10,8 @@ public class NetworkController: NetworkControllerProtocol {
     public func request<T : Decodable>(_ method: HttpMethod,
                                        decoder: JSONDecoder = newJSONDecoder(),
                                        url: URL,
-                                       headers: Headers,
-                                       params: [String : Any]?) async throws -> T {
+                                       headers: Headers = [String : Any](),
+                                       params: [String : Any]? = nil) async throws -> T {
         let randomRequest = "\(Int.random(in: 0 ..< 100))"
         var timeDateRequest = Date()
         
@@ -91,8 +91,8 @@ public class NetworkController: NetworkControllerProtocol {
     public func request<T: Decodable>(_ method : HttpMethod,
                                       decoder  : JSONDecoder = newJSONDecoder(),
                                       url      : URL,
-                                      headers  : Headers,
-                                      params   : [String: Any]?) -> AnyPublisher<T, Error> {
+                                      headers  : Headers = [String : Any](),
+                                      params   : [String: Any]? = nil) -> AnyPublisher<T, Error> {
         let randomRequest   = "\(Int.random(in: 0 ..< 100))"
         var timeDateRequest = Date()
         
