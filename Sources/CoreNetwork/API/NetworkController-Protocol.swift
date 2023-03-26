@@ -25,6 +25,7 @@ public protocol NetworkControllerProtocol: AnyObject {
     ) -> AnyPublisher<T, Error>
 }
 
+//  MARK: - HttpMethod
 public enum HttpMethod: String {
     case get    = "GET"
     case post   = "POST"
@@ -32,6 +33,7 @@ public enum HttpMethod: String {
     case delete = "DELETE"
 }
 
+//  MARK: - NetworkError
 enum NetworkError: Error, Equatable {
     case invalidURL
     case noResponse
