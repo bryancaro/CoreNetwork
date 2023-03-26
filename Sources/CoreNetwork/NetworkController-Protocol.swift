@@ -25,7 +25,7 @@ public protocol NetworkControllerProtocol: AnyObject {
     ) -> AnyPublisher<T, Error>
 }
 
-public enum HttpMethod: String{
+public enum HttpMethod: String {
     case get    = "GET"
     case post   = "POST"
     case put    = "PUT"
