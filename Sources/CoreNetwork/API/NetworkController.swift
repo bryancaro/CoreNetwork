@@ -12,7 +12,7 @@ public struct NetworkController {
     //  MARK: - Async Await
     public func request<T : Decodable>(_ method: HttpMethod,
                                        decoder: JSONDecoder = newJSONDecoder(),
-                                       url: URL,
+                                       url: URL?,
                                        headers: [String: Any] = [String : Any](),
                                        params: [String : Any]? = nil) async throws -> T {
         let randomRequest = "\(Int.random(in: 0 ..< 100))"
@@ -20,6 +20,11 @@ public struct NetworkController {
 
         print("🌎🔵 [API][ASYNC] [id: \(randomRequest)] [URL]: [\(String(describing: url))]")
         print("🌎🔵 [API][ASYNC] [id: \(randomRequest)] [PARAMETERS]: [\(String(describing: params))]")
+
+        guard let url else {
+            print("🌎🔴 [API][ASYNC] [id: \(randomRequest)] [RESPONSE ERROR]: [invalidURL]")
+            throw NetworkError.invalidURL
+        }
 
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = method.rawValue
