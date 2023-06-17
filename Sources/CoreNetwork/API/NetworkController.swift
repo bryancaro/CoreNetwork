@@ -3,47 +3,48 @@ import Combine
 
 open class Network: NetworkProtocol {
     public var manager: NetworkController = NetworkController()
-    
+
     public init() {}
 }
 
-public class NetworkController: NetworkControllerProtocol {
+public struct NetworkController {
+    public init() {}
     //  MARK: - Async Await
     public func request<T : Decodable>(_ method: HttpMethod,
                                        decoder: JSONDecoder = newJSONDecoder(),
                                        url: URL,
-                                       headers: Headers = [String : Any](),
+                                       headers: [String: Any] = [String : Any](),
                                        params: [String : Any]? = nil) async throws -> T {
         let randomRequest = "\(Int.random(in: 0 ..< 100))"
         var timeDateRequest = Date()
-        
+
         print("🌎🔵 [API][ASYNC] [id: \(randomRequest)] [URL]: [\(String(describing: url))]")
         print("🌎🔵 [API][ASYNC] [id: \(randomRequest)] [PARAMETERS]: [\(String(describing: params))]")
-        
+
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = method.rawValue
         urlRequest.httpBody = params?.paramsEncoded()
-        
+
         headers.forEach { (key, value) in
             if let value = value as? String {
                 urlRequest.setValue(value, forHTTPHeaderField: key)
             }
         }
-        
+
         do {
             timeDateRequest = Date()
             print("🌎🔵 [API][ASYNC] [id: \(randomRequest)] [SUBSCRIPTION]")
-            
+
             let (data, response) = try await URLSession.shared.data(for: urlRequest)
-            
+
             print("🌎🔵 [API][ASYNC] [id: \(randomRequest)] [COMPLETION][TIME]: [\(Date().timeIntervalSince(timeDateRequest).milliseconds)ms]")
             print("🌎🔵 [API][ASYNC] [id: \(randomRequest)] [OUTPUT]: [\(String(decoding: data, as: UTF8.self))]")
-            
+
             guard let response = response as? HTTPURLResponse else {
                 print("🌎🔴 [API][ASYNC] [id: \(randomRequest)] [RESPONSE ERROR]: [noResponse]")
                 throw NetworkError.noResponse
             }
-            
+
             if response.statusCode >= 200 && response.statusCode < 299 {
                 if T.Type.self == EmptyResponse.Type.self {
                     print("🌎🔵 [API][ASYNC] [id: \(randomRequest)] [PARSER]: [EmptyResponse]")
@@ -56,7 +57,7 @@ public class NetworkController: NetworkControllerProtocol {
             } else {
                 let errorValue = try decoder.decode(ErrorResponse.self, from: data)
                 print("🌎⚠️ [API][ASYNC] [id: \(randomRequest)] [ERROR RESPONSE]: [\(errorValue)]")
-                
+
                 throw NetworkError.serverError(errorValue.errorMessage ?? "default.error.message")
             }
         } catch let DecodingError.dataCorrupted(context) {
@@ -88,29 +89,29 @@ public class NetworkController: NetworkControllerProtocol {
             throw error
         }
     }
-    
+
     //  MARK: - Combine
     public func request<T: Decodable>(_ method : HttpMethod,
                                       decoder  : JSONDecoder = newJSONDecoder(),
                                       url      : URL,
-                                      headers  : Headers = [String : Any](),
+                                      headers  : [String: Any] = [String : Any](),
                                       params   : [String: Any]? = nil) -> AnyPublisher<T, Error> {
         let randomRequest   = "\(Int.random(in: 0 ..< 100))"
         var timeDateRequest = Date()
-        
+
         print("🌎🔵 [API][COMBINE] [id: \(randomRequest)] [URL]: [\(String(describing: url))]")
         print("🌎🔵 [API][COMBINE] [id: \(randomRequest)] [PARAMETERS]: [\(String(describing: params))]")
-        
+
         var urlRequest        = URLRequest(url: url)
         urlRequest.httpMethod = method.rawValue
         urlRequest.httpBody   = params?.paramsEncoded()
-        
+
         headers.forEach { (key, value) in
             if let value = value as? String {
                 urlRequest.setValue(value, forHTTPHeaderField: key)
             }
         }
-        
+
         return URLSession.shared.dataTaskPublisher(for: urlRequest)
         //  MARK: - Combine Events
             .handleEvents(receiveSubscription: { subscription in
@@ -126,7 +127,7 @@ public class NetworkController: NetworkControllerProtocol {
         //  MARK: - Map Error
             .mapError { error -> Error in
                 print("🌎🔴 [API][COMBINE] [id: \(randomRequest)] [ERROR]: [\(error.localizedDescription)]")
-                
+
                 return error
             }
         //  MARK: - Map Response
@@ -135,12 +136,12 @@ public class NetworkController: NetworkControllerProtocol {
                     print("🌎🔴 [API][COMBINE] [id: \(randomRequest)] [RESPONSE ERROR]: [noResponse]")
                     throw NetworkError.noResponse
                 }
-                
+
                 do {
                     timeDateRequest = Date()
-                    
+
                     print("🌎🔵 [API][COMBINE] [id: \(randomRequest)] [OUTPUT]: [\(String(decoding: result.data, as: UTF8.self))]")
-                    
+
                     if response.statusCode >= 200 && response.statusCode < 299 {
                         if T.Type.self == EmptyResponse.Type.self {
                             print("🌎🔵 [API][COMBINE] [id: \(randomRequest)] [PARSER]: [EmptyResponse]")
@@ -153,7 +154,7 @@ public class NetworkController: NetworkControllerProtocol {
                     } else {
                         let errorValue = try decoder.decode(ErrorResponse.self, from: result.data)
                         print("🌎⚠️ [API][COMBINE] [id: \(randomRequest)] [ERROR RESPONSE]: [\(errorValue)]")
-                        
+
                         throw NetworkError.serverError(errorValue.errorMessage ?? "default.error.message")
                     }
                 } catch let DecodingError.dataCorrupted(context) {

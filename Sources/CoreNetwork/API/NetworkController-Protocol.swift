@@ -7,7 +7,7 @@ protocol NetworkProtocol {
 
 public protocol NetworkControllerProtocol: AnyObject {
     typealias Headers = [String: Any]
-    
+
     //  MARK: - Async Await
     func request<T: Decodable>(_ method : HttpMethod,
                                decoder  : JSONDecoder,
@@ -15,7 +15,7 @@ public protocol NetworkControllerProtocol: AnyObject {
                                headers  : Headers,
                                params   : [String: Any]?
     ) async throws -> T
-    
+
     //  MARK: - Combine
     func request<T: Decodable>(_ method : HttpMethod,
                     decoder  : JSONDecoder,
