@@ -14,7 +14,7 @@ public struct NetworkController {
                                      decoder: JSONDecoder = newJSONDecoder(),
                                      url: URL?,
                                      headers: [String: Any] = [String: Any](),
-                                     queryItems: [URLQueryItem]? = nil) async throws -> T {
+                                     queryItems: [String: Any]? = nil) async throws -> T {
         let randomRequest = "\(Int.random(in: 0 ..< 100))"
         var timeDateRequest = Date()
 
@@ -27,7 +27,7 @@ public struct NetworkController {
         }
 
         var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)
-        urlComponents?.queryItems = queryItems
+        urlComponents?.queryItems = queryItems?.queryItems
 
         guard let finalURL = urlComponents?.url else {
             print("🌎🔴 [API][ASYNC] [id: \(randomRequest)] [RESPONSE ERROR]: [invalidURL]")
