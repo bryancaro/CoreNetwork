@@ -28,3 +28,20 @@ extension Dictionary {
         .data(using: .utf8)
     }
 }
+
+extension Dictionary where Key == String, Value == Any {
+    var queryItems: [URLQueryItem] {
+        var items: [URLQueryItem] = []
+        for (key, value) in self {
+            let stringValue: String
+            if let arrayValue = value as? [Any] {
+                stringValue = arrayValue.compactMap { String(describing: $0) }.joined(separator: ",")
+            } else {
+                stringValue = String(describing: value)
+            }
+            let queryItem = URLQueryItem(name: key, value: stringValue)
+            items.append(queryItem)
+        }
+        return items
+    }
+}
