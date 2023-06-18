@@ -10,7 +10,7 @@ open class Network: NetworkProtocol {
 public struct NetworkController {
     public init() {}
     //  MARK: - Async Await
-    public func request<T: Decodable>(_ method: HttpMethod,
+    public func requestTwo<T: Decodable>(_ method: HttpMethod,
                                      decoder: JSONDecoder = newJSONDecoder(),
                                      url: URL?,
                                      headers: [String: Any] = [String: Any](),
