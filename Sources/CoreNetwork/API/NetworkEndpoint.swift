@@ -10,7 +10,6 @@ public struct Endpoint {
     }
 }
 
-
 public extension Endpoint {
     var url: URL {
         var components        = URLComponents()
