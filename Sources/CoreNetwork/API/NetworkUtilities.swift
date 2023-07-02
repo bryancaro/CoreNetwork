@@ -45,3 +45,12 @@ extension Dictionary where Key == String, Value == Any {
         return items
     }
 }
+
+extension Data {
+    func printAsJSON() -> String {
+        guard let jsonData = try? JSONSerialization.jsonObject(with: self, options: []) else { return "" }
+        guard let json = try? JSONSerialization.data(withJSONObject: jsonData, options: .prettyPrinted) else { return "" }
+        guard let jsonString = String(data: json, encoding: .utf8) else { return "" }
+        return jsonString
+    }
+}
