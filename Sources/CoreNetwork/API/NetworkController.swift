@@ -20,8 +20,8 @@ public class NetworkController {
         var timeDateRequest = Date()
         
         debugPrint("🌎🔵 [API][ASYNC] [id: \(randomRequest)] [URL]: [\(String(describing: url))]")
-        debugPrint("🌎🔵 [API][ASYNC] [id: \(randomRequest)] [QUERY ITEMS]: [\(String(describing: params))]")
-        debugPrint("🌎🔵 [API][ASYNC] [id: \(randomRequest)] [HEADER ITEMS]: [\(String(describing: headers))]")
+        print("🌎🔵 [API][ASYNC] [id: \(randomRequest)] [QUERY ITEMS]: [\(String(describing: params))]")
+        print("🌎🔵 [API][ASYNC] [id: \(randomRequest)] [HEADER ITEMS]: [\(String(describing: headers))]")
         
         guard let url = url else {
             debugPrint("🌎🔴 [API][ASYNC] [id: \(randomRequest)] [RESPONSE ERROR]: [invalidURL]")
@@ -112,8 +112,8 @@ public class NetworkController {
         var timeDateRequest = Date()
         
         debugPrint("🌎🔵 [API][COMBINE] [id: \(randomRequest)] [URL]: [\(String(describing: url))]")
-        debugPrint("🌎🔵 [API][COMBINE] [id: \(randomRequest)] [PARAMETERS]: [\(String(describing: params))]")
-        debugPrint("🌎🔵 [API][COMBINE] [id: \(randomRequest)] [HEADER ITEMS]: [\(String(describing: headers))]")
+        print("🌎🔵 [API][COMBINE] [id: \(randomRequest)] [PARAMETERS]: [\(String(describing: params))]")
+        print("🌎🔵 [API][COMBINE] [id: \(randomRequest)] [HEADER ITEMS]: [\(String(describing: headers))]")
 
         
         var urlRequest        = URLRequest(url: url)
@@ -132,7 +132,7 @@ public class NetworkController {
                 timeDateRequest = Date()
                 debugPrint("🌎🔵 [API][COMBINE] [id: \(randomRequest)] [SUBSCRIPTION]")
             }, receiveOutput: { value in
-                debugPrint("🌎🔵 [API][COMBINE] [id: \(randomRequest)] [OUTPUT]: [\(value.data.printAsJSON())]")
+                print("🌎🔵 [API][COMBINE] [id: \(randomRequest)] [OUTPUT]: [\(value.data.printAsJSON())]")
             }, receiveCompletion: { value in
                 debugPrint("🌎🔵 [API][COMBINE] [id: \(randomRequest)] [COMPLETION][TIME]: [\(Date().timeIntervalSince(timeDateRequest).milliseconds)ms]")
             }, receiveCancel: {
