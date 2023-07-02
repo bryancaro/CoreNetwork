@@ -50,7 +50,7 @@ public class NetworkController {
             let (data, response) = try await URLSession.shared.data(for: urlRequest)
             
             debugPrint("🌎🔵 [API][ASYNC] [id: \(randomRequest)] [COMPLETION][TIME]: [\(Date().timeIntervalSince(timeDateRequest).milliseconds)ms]")
-            debugPrint("🌎🔵 [API][ASYNC] [id: \(randomRequest)] [OUTPUT]: [\(data.printAsJSON())]")
+            print("🌎🔵 [API][ASYNC] [id: \(randomRequest)] [OUTPUT]: [\(data.printAsJSON())]")
 
             guard let response = response as? HTTPURLResponse else {
                 debugPrint("🌎🔴 [API][ASYNC] [id: \(randomRequest)] [RESPONSE ERROR]: [noResponse]")
