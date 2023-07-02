@@ -21,6 +21,7 @@ public class NetworkController {
         
         debugPrint("🌎🔵 [API][ASYNC] [id: \(randomRequest)] [URL]: [\(String(describing: url))]")
         debugPrint("🌎🔵 [API][ASYNC] [id: \(randomRequest)] [QUERY ITEMS]: [\(String(describing: params))]")
+        debugPrint("🌎🔵 [API][ASYNC] [id: \(randomRequest)] [HEADER ITEMS]: [\(String(describing: headers))]")
         
         guard let url = url else {
             debugPrint("🌎🔴 [API][ASYNC] [id: \(randomRequest)] [RESPONSE ERROR]: [invalidURL]")
@@ -49,8 +50,8 @@ public class NetworkController {
             let (data, response) = try await URLSession.shared.data(for: urlRequest)
             
             debugPrint("🌎🔵 [API][ASYNC] [id: \(randomRequest)] [COMPLETION][TIME]: [\(Date().timeIntervalSince(timeDateRequest).milliseconds)ms]")
-            debugPrint("🌎🔵 [API][ASYNC] [id: \(randomRequest)] [OUTPUT]: [\(String(decoding: data, as: UTF8.self))]")
-            
+            debugPrint("🌎🔵 [API][ASYNC] [id: \(randomRequest)] [OUTPUT]: [\(data.printAsJSON())]")
+
             guard let response = response as? HTTPURLResponse else {
                 debugPrint("🌎🔴 [API][ASYNC] [id: \(randomRequest)] [RESPONSE ERROR]: [noResponse]")
                 throw NetworkError.noResponse
@@ -112,6 +113,8 @@ public class NetworkController {
         
         debugPrint("🌎🔵 [API][COMBINE] [id: \(randomRequest)] [URL]: [\(String(describing: url))]")
         debugPrint("🌎🔵 [API][COMBINE] [id: \(randomRequest)] [PARAMETERS]: [\(String(describing: params))]")
+        debugPrint("🌎🔵 [API][COMBINE] [id: \(randomRequest)] [HEADER ITEMS]: [\(String(describing: headers))]")
+
         
         var urlRequest        = URLRequest(url: url)
         urlRequest.httpMethod = method.rawValue
@@ -129,7 +132,7 @@ public class NetworkController {
                 timeDateRequest = Date()
                 debugPrint("🌎🔵 [API][COMBINE] [id: \(randomRequest)] [SUBSCRIPTION]")
             }, receiveOutput: { value in
-                debugPrint("🌎🔵 [API][COMBINE] [id: \(randomRequest)] [OUTPUT]: [\(String(decoding: value.data, as: UTF8.self))]")
+                debugPrint("🌎🔵 [API][COMBINE] [id: \(randomRequest)] [OUTPUT]: [\(value.data.printAsJSON())]")
             }, receiveCompletion: { value in
                 debugPrint("🌎🔵 [API][COMBINE] [id: \(randomRequest)] [COMPLETION][TIME]: [\(Date().timeIntervalSince(timeDateRequest).milliseconds)ms]")
             }, receiveCancel: {
