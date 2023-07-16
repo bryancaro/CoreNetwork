@@ -7,6 +7,11 @@ open class Network: NetworkProtocol {
     public init() {}
 }
 
+public enum BodyType {
+    case raw
+    case normal
+}
+
 public class NetworkController {
     public init() {}
     //  MARK: - Async Await
@@ -15,7 +20,8 @@ public class NetworkController {
                                       url: URL?,
                                       headers: [String: Any] = [String: Any](),
                                       params: [String: Any]? = nil,
-                                      sendParamsInQuery: Bool = false) async throws -> T {
+                                      sendParamsInQuery: Bool = false,
+                                      bodyType: BodyType = .normal) async throws -> T {
         let randomRequest = "\(Int.random(in: 0 ..< 100))"
         var timeDateRequest = Date()
         
@@ -34,7 +40,13 @@ public class NetworkController {
         if sendParamsInQuery {
             urlRequest.url = buildURLWithQueryItems(url: url, params: params)
         } else {
-            urlRequest.httpBody = params?.paramsEncoded()
+            switch bodyType {
+            case .raw:
+                urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+                urlRequest.httpBody = params?.paramsEncoded()
+            case .normal:
+                urlRequest.httpBody = params?.paramsEncoded()
+            }
         }
         
         headers.forEach { (key, value) in
