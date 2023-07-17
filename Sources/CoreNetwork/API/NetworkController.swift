@@ -8,8 +8,8 @@ open class Network: NetworkProtocol {
 }
 
 public enum BodyType {
-    case raw
-    case normal
+    case inBody
+    case inQuery
 }
 
 public class NetworkController {
@@ -20,8 +20,8 @@ public class NetworkController {
                                       url: URL?,
                                       headers: [String: Any] = [String: Any](),
                                       params: [String: Any]? = nil,
-                                      sendParamsInQuery: Bool = false,
-                                      bodyType: BodyType = .normal) async throws -> T {
+                                      mustEncodeParams: Bool,
+                                      bodyType: BodyType = .inBody) async throws -> T {
         let randomRequest = "\(Int.random(in: 0 ..< 100))"
         var timeDateRequest = Date()
         
@@ -36,17 +36,19 @@ public class NetworkController {
         
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = method.rawValue
-        
-        if sendParamsInQuery {
-            urlRequest.url = buildURLWithQueryItems(url: url, params: params)
-        } else {
-            switch bodyType {
-            case .raw:
-                urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        switch bodyType {
+        case .inBody:
+            if mustEncodeParams {
                 urlRequest.httpBody = params?.paramsEncoded()
-            case .normal:
-                urlRequest.httpBody = params?.paramsEncoded()
+            } else {
+                if let params {
+                    urlRequest.httpBody = try? JSONSerialization.data(withJSONObject: params, options: [])
+                }
             }
+        case .inQuery:
+            urlRequest.url = buildURLWithQueryItems(url: url, params: params)
         }
         
         headers.forEach { (key, value) in
