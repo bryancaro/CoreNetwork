@@ -20,7 +20,7 @@ public class NetworkController {
                                       url: URL?,
                                       headers: [String: Any] = [String: Any](),
                                       params: [String: Any]? = nil,
-                                      mustEncodeParams: Bool,
+                                      mustEncodeParams: Bool = false,
                                       bodyType: BodyType = .inBody) async throws -> T {
         let randomRequest = "\(Int.random(in: 0 ..< 100))"
         var timeDateRequest = Date()
