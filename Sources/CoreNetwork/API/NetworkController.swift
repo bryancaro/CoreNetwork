@@ -282,7 +282,7 @@ public class NetworkController {
 }
 
 extension NetworkController {
-    static func _printChanges() -> NetworkController {
+    public static func _printChanges() -> NetworkController {
         let controller = NetworkController()
         controller.debug = true
         return controller
